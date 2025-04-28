@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - ICY Store</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo">
+            <span class="store-name">ICY Store</span>
+        </div>
+        <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <div class="user-dropdown">
+                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                <div class="dropdown-content" id="dropdown">
+                    <a href="{% url 'orders' %}">Orders</a>
+                    <a href="{% url 'account_settings' %}">Account Settings</a>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </div>
+        </div>
+        <!-- Cart Icon -->
+        <div class="cart-container">
+            <img src="{% static 'images/cart.png' %}" alt="Cart" class="cart-icon" onclick="viewCart()">
+            <span class="cart-item-count" id="cart-item-count">{{ cart_item_count }}</span>
+        </div>
+    </header>
+
+    <!-- Main Body Section -->
+    <main>
+        <center><h2>Products</h2></center>
+
+        <div class="main-content">
+            <div class="diamond-packs">
+                {% for product in products %}
+                    <div class="diamond-pack" data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}">
+                        <h3>💎{{ product.name }}</h3>
+                        <p>₹{{ product.price }}</p>
+                        <button class="select-pack" onclick="openDialog(this)">Select</button>
+                    </div>
+                {% empty %}
+                    <p>No products available right now. Please check back later!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal/Dialog for Player ID and Server ID -->
+    <div id="idDialog" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeDialog()">&times;</span>
+            <h2 id="selectedProductName"></h2>
+            <p id="selectedProductPrice"></p>
+            <form id="idForm" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="productId" name="product_id">
+                <input type="text" name="player_id" placeholder="PLAYER ID" required><br><br>
+                <input type="text" name="server_id" placeholder="SERVER ID" required><br><br>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Contact us:</p>
+        <p>Phone: +91 9362843841</p>
+        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/product.js' %}"></script>
+</body>
+</html>

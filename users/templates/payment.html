@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods Unavailable</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px;
+            background-color: #222;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ff6f61, #ffcc00);
+            background-clip: text;
+            color: transparent;
+            -webkit-background-clip: text;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #ccc;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #ff6f61;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #e55e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>We're Sorry!</h1>
+        <p>Payment methods are not available at this time. Please try again later.</p>
+        <a href="{% url 'products' %}" class="back-button">Back to Home</a>
+    </div>
+</body>
+</html>

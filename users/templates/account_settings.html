@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - ICY Store</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .account-settings-form {
+            width: 60%;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .message-box {
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        
+        .message.success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .message.error {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo">
+            <span class="store-name">ICY Store</span>
+        </div>
+        <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <div class="user-dropdown">
+                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                <div class="dropdown-content" id="dropdown">
+                    <a href="{% url 'orders' %}">Orders</a>
+                    <a href="{% url 'account_settings' %}">Account Settings</a>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Account Settings Page -->
+    <main>
+        <center><h2>Account Settings</h2></center>
+
+        <!-- Show messages (e.g., success or error) -->
+        {% if messages %}
+            <div class="message-box">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" class="account-settings-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">New Username:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">New Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+            <button type="submit" class="btn">Update</button>
+        </form>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Contact us:</p>
+        <p>Phone: +91 9362843841</p>
+        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/product.js' %}"></script>
+</body>
+</html>

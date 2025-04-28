@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICY Store</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Correct way -->
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo">
+            <span class="store-name">ICY Store</span>
+        </div>
+        <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <div class="user-dropdown">
+                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                <div class="dropdown-content" id="dropdown">
+                    <a href="{% url 'orders' %}">Orders</a>
+                    <a href="{% url 'account_settings' %}">Account Settings</a>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </div>
+        </div>
+        <!-- Cart Icon -->
+        <div class="cart-container">
+            <img src="{% static 'images/cart.png' %}" alt="Cart" class="cart-icon" onclick="viewCart()">
+            <span class="cart-item-count" id="cart-item-count">{{ cart_item_count }}</span>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        <h1>Checkout</h1>
+    
+        <div class="order-details">
+            <h2>Order Details</h2>
+            <table class="order-summary-table">
+                <tr>
+                    <th>Product Name</th>
+                    <td id="orderProductName">{{ order.product_name }}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td id="orderPrice">₹{{ order.price }}</td>
+                </tr>
+                <tr>
+                    <th>Player ID</th>
+                    <td id="orderPlayerId">{{ player_id }}</td>
+                </tr>
+                <tr>
+                    <th>Server ID</th>
+                    <td id="orderServerId">{{ server_id }}</td>
+                </tr>
+            </table>
+        </div>
+    
+        <div class="total-price">
+            <h3>Total Price: ₹{{ total_price }}</h3>
+        </div>
+    
+        <div class="pay-section">
+            <!-- Placeholder for payment button (no payment functionality yet) -->
+            <a href="{% url 'payment' %}" class="pay-button">Proceed to Payment</a>
+        </div>
+    </div>
+    
+    
+
+    <footer>
+        <p>Contact us:</p>
+        <p>Phone: +91 9362843841</p>
+        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+    </footer>
+</body>
+</html>

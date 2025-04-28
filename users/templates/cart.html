@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - ICY Store</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo">
+            <span class="store-name">ICY Store</span>
+        </div>
+        <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <div class="user-dropdown">
+                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                <div class="dropdown-content" id="dropdown">
+                    <a href="{% url 'orders' %}">Orders</a>
+                    <a href="{% url 'account_settings' %}">Account Settings</a>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Page Section -->
+    <main>
+        <center><h2>Your Cart</h2></center>
+
+        <div class="cart-table-container">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>₹{{ item.product.price }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₹{{ item.total_price }}</td>
+                        <td>
+                            <!-- Proceed to checkout for this specific item -->
+                            <a href="{% url 'checkout' item.id %}" class="checkout-btn">Proceed to Checkout</a>
+                            <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Remove</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Your cart is empty!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="cart-summary">
+                <p><strong>Total Price: </strong> ₹{{ total_price }}</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Contact us:</p>
+        <p>Phone: +91 9362843841</p>
+        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/product.js' %}"></script>
+</body>
+</html>
