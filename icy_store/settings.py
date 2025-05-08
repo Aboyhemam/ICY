@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-SITE_ID=2
+SITE_ID=3
 
 # Application definition
 
@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.cart_item_count',
             ],
         },
     },
@@ -160,3 +161,7 @@ LOGOUT_REDIRECT_URL ="/"
 # settings.py
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_LOGOUT_ON_GET = True
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - ICY Store</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<!-- Header Section -->
+<header class="header">
+    <!-- Search box will be at the top due to CSS order -->
+    <div class="search-container">
+        <form method="get" action="{% url 'products' %}" class="search-form">
+            <input type="text" name="search" placeholder="Search products..." value="{{ search }}">
+            <button type="submit" class="search">Search</button>
+        </form>
+    </div>
+
+    <!-- This is the new horizontal row -->
+    <div class="top-row">
+        <div class="logo-container">
+            <a class="store" href="{% url 'products' %}">
+            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo"></a>
+            <a class="store" href="{% url 'products' %}">
+                <span class="store-name">ICY Store</span>
+            </a>
+        </div>
+
+        <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <div class="user-dropdown">
+                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                <div class="dropdown-content" id="dropdown">
+                    <a href="{% url 'orders' %}">Orders</a>
+                    <a href="{% url 'account_settings' %}">Account Settings</a>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-container">
+            <img src="{% static 'images/cart.png' %}" alt="Cart" class="cart-icon" onclick="viewCart()">
+            {% if cart_count > 0 %}
+                 <div class="cart-item-count">{{ cart_count }}</div>
+                {% endif %}
+        </div>
+    </div>
+</header>
+
+<body>
+
+
+    <div class="order-detail-container">
+        <h2>Order Details</h2>
+        <div class="order-card">
+            <div class="order-info">
+                <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                <p><strong>Game:</strong> {{ order.game }}</p>
+                <p><strong>Product:</strong> {{ order.product_name }}</p>
+                <p><strong>Price:</strong> ₹{{ order.price }}</p>
+                <p><strong>Player ID:</strong> {{ order.player_id }}</p>
+                <p><strong>Server ID:</strong> {{ order.server_id }}</p>
+                <p><strong>Status:</strong> {{ order.status }}</p>
+                <p><strong>Transaction ID:</strong> {{ order.transaction_id }}</p>
+                <p><strong>Order Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</p>
+            </div>
+            <div class="order-actions">
+                <a href="{% url 'orders' %}" class="back-button">← Back to Orders</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><a href="{% url 'contact' %}">Contact us:</a></p>
+        <p>Phone: +91 9362843841</p>
+        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+        <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
+    </footer>
+    <script src="{% static 'js/products.js' %}"></script>
+</body>
+</html>
+

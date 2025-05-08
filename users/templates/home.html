@@ -5,28 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICY Store</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Correct way -->
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"> <!-- Correct way -->
 </head>
 <body>
     <div class="container">
         <h1>Welcome to ICY Store</h1>
         <h2>We guarantee 100% product delivery</h2>
+       
 
         {% load socialaccount %}
-        <div class="login-section">
-            <h2>Google Login</h2>
-            <a class="login-button" href="{% provider_login_url 'google' %}">
-                <img src="{% static 'images/google-logo.png' %}" alt="Google Logo" class="google-logo">
-                Login With Google
-            </a>
-        </div>
-    </div>
+<div class="login-section">
+    <h2>Google Login</h2>
+    <a class="google-login-btn" href="{% provider_login_url 'google' %}">
+        <img src="{% static 'images/google-logo.png' %}" alt="Google Logo" class="google-logo">
+        Login With Google
+    </a>
+</div>
 
-    <footer>
-        <p>Contact us:</p>
-        <p>Phone: +91 9362843841</p>
-        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
-        <p>&copy; 2025 ICY Store. All rights reserved.</p>
-    </footer>
+
+        </div>
+    
+
+        <footer>
+            <p><a href="{% url 'contact' %}">Contact us:</a></p>
+            <p>Phone: +91 9362843841</p>
+            <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+            <p>&copy; 2025 ICY Store. All rights reserved.</p>
+            <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
+        </footer>
 </body>
 </html>

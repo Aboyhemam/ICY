@@ -14,8 +14,10 @@ window.onclick = function(event) {
     }
 }
 
+
+
 // Handle Diamond Pack Selection
-const packs = document.querySelectorAll('.diamond-pack');
+const packs = document.querySelectorAll('.topup-pack');
 const packName = document.getElementById('pack-name');
 const payableAmount = document.getElementById('payable-amount');
 
@@ -30,33 +32,34 @@ packs.forEach(pack => {
     });
 });
 
+// Function to open modal
 function openDialog(button) {
-    const pack = button.parentElement;
-    const productId = pack.getAttribute('data-id');
-    const productName = pack.getAttribute('data-name');
-    const productPrice = pack.getAttribute('data-price');
+    const modal = document.getElementById('idDialog');
+    const product = button.closest('.topup-pack');  // ✅ Fixed here
 
-    document.getElementById('selectedProductName').innerText = productName;
-    document.getElementById('selectedProductPrice').innerText = "Price: ₹" + productPrice;
-    document.getElementById('productId').value = productId;
+    document.getElementById('idForm').action = `/add-to-cart/${product.dataset.id}/`;
+    document.getElementById('selectedProductName').textContent = product.dataset.name;
+    document.getElementById('selectedProductPrice').textContent = `₹${product.dataset.price}`;
+    document.getElementById('productId').value = product.dataset.id;
 
-    // Set form action dynamically
-    document.getElementById('idForm').action = `/add-to-cart/${productId}/`;
-
-    document.getElementById('idDialog').style.display = 'block';
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 }
+
 
 function closeDialog() {
-    document.getElementById('idDialog').style.display = 'none';
+    const modal = document.getElementById('idDialog');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
 }
 
-// Optional: Close modal when clicking outside the modal
-window.onclick = function(event) {
-    const modal = document.getElementById('idDialog');
-    if (event.target == modal) {
+
+// Close modal when clicking outside content
+document.getElementById('idDialog').addEventListener('click', function(e) {
+    if (e.target === this) {
         closeDialog();
     }
-};
+});
 function viewCart() {
     window.location.href = "/cart/";  // Redirect to the cart page
 }

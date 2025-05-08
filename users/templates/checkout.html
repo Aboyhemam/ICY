@@ -8,28 +8,46 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Correct way -->
 </head>
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo">
-            <span class="store-name">ICY Store</span>
-        </div>
-        <div class="user-info">
-            <span class="username">{{ user.username }}</span>
-            <div class="user-dropdown">
-                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
-                <div class="dropdown-content" id="dropdown">
-                    <a href="{% url 'orders' %}">Orders</a>
-                    <a href="{% url 'account_settings' %}">Account Settings</a>
-                    <a href="{% url 'logout' %}">Log Out</a>
+        <!-- Header Section -->
+        <header class="header">
+            <!-- Search box will be at the top due to CSS order -->
+            <div class="search-container">
+                <form method="get" action="{% url 'products' %}" class="search-form">
+                    <input type="text" name="search" placeholder="Search products..." value="{{ search }}">
+                    <button type="submit" class="search">Search</button>
+                </form>
+            </div>
+        
+            <!-- This is the new horizontal row -->
+            <div class="top-row">
+                <div class="logo-container">
+                    <a class="store" href="{% url 'products' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo"></a>
+                    <a class="store" href="{% url 'products' %}">
+                        <span class="store-name">ICY Store</span>
+                    </a>
+                </div>
+        
+                <div class="user-info">
+                    <span class="username">{{ user.username }}</span>
+                    <div class="user-dropdown">
+                        <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                        <div class="dropdown-content" id="dropdown">
+                            <a href="{% url 'orders' %}">Orders</a>
+                            <a href="{% url 'account_settings' %}">Account Settings</a>
+                            <a href="{% url 'logout' %}">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="cart-container">
+                    <img src="{% static 'images/cart.png' %}" alt="Cart" class="cart-icon" onclick="viewCart()">
+                    {% if cart_count > 0 %}
+                 <div class="cart-item-count">{{ cart_count }}</div>
+                {% endif %}
                 </div>
             </div>
-        </div>
-        <!-- Cart Icon -->
-        <div class="cart-container">
-            <img src="{% static 'images/cart.png' %}" alt="Cart" class="cart-icon" onclick="viewCart()">
-            <span class="cart-item-count" id="cart-item-count">{{ cart_item_count }}</span>
-        </div>
-    </header>
+        </header>
 
     <div class="checkout-container">
         <h1>Checkout</h1>
@@ -60,19 +78,47 @@
             <h3>Total Price: ₹{{ total_price }}</h3>
         </div>
     
-        <div class="pay-section">
-            <!-- Placeholder for payment button (no payment functionality yet) -->
-            <a href="{% url 'payment' %}" class="pay-button">Proceed to Payment</a>
+        <div class="terms-agreement" style="margin-top: 20px;">
+            <input type="checkbox" id="agreeTerms" name="agreeTerms" {% if has_agreed %}checked{% endif %} onchange="togglePaymentButton()">
+            <label for="agreeTerms">
+                To proceed further, you have to agree to our 
+                <a href="{% url 'terms' %}" target="_blank">Terms & Policies</a>.
+            </label>
         </div>
+        
+        <div class="pay-section" style="margin-top: 20px;">
+            <form method="POST" action="{% url 'confirm_terms_and_payment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="confirm_terms" value="yes">
+                <button type="submit" id="paymentButton" class="pay-button"
+                    {% if not has_agreed %}disabled style="opacity: 0.5;"{% endif %}>
+                    Proceed to Payment
+                </button>
+            </form>
+        </div>
+        
+        <script>
+            function togglePaymentButton() {
+                const checkbox = document.getElementById('agreeTerms');
+                const button = document.getElementById('paymentButton');
+                button.disabled = !checkbox.checked;
+                button.style.opacity = checkbox.checked ? '1' : '0.5';
+            }
+        
+            // In case the page loads with checkbox already checked (agreed before)
+            window.onload = togglePaymentButton;
+        </script>
+        
     </div>
     
     
 
     <footer>
-        <p>Contact us:</p>
+        <p><a href="{% url 'contact' %}">Contact us:</a></p>
         <p>Phone: +91 9362843841</p>
         <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
         <p>&copy; 2025 ICY Store. All rights reserved.</p>
+        <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
     </footer>
 </body>
 </html>

@@ -7,23 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - ICY Store</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/table2.css' %}">
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="header">
-        <div class="logo-container">
-            <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo">
-            <span class="store-name">ICY Store</span>
+     <!-- Header Section -->
+     <header class="header">
+        <!-- Search box will be at the top due to CSS order -->
+        <div class="search-container">
+            <form method="get" action="{% url 'products' %}" class="search-form">
+                <input type="text" name="search" placeholder="Search products..." value="{{ search }}">
+                <button type="submit" class="search">Search</button>
+            </form>
         </div>
-        <div class="user-info">
-            <span class="username">{{ user.username }}</span>
-            <div class="user-dropdown">
-                <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
-                <div class="dropdown-content" id="dropdown">
-                    <a href="{% url 'orders' %}">Orders</a>
-                    <a href="{% url 'account_settings' %}">Account Settings</a>
-                    <a href="{% url 'logout' %}">Log Out</a>
+    
+        <!-- This is the new horizontal row -->
+        <div class="top-row">
+            <div class="logo-container">
+                <a class="store" href="{% url 'products' %}">
+                <img src="{% static 'images/logo.png' %}" alt="ICY Store Logo" class="logo"></a>
+                <a class="store" href="{% url 'products' %}">
+                    <span class="store-name">ICY Store</span>
+                </a>
+            </div>
+    
+            <div class="user-info">
+                <span class="username">{{ user.username }}</span>
+                <div class="user-dropdown">
+                    <img src="{% static 'images/person-icon.png' %}" alt="User Icon" class="person-icon" onclick="toggleDropdown()">
+                    <div class="dropdown-content" id="dropdown">
+                        <a href="{% url 'orders' %}">Orders</a>
+                        <a href="{% url 'account_settings' %}">Account Settings</a>
+                        <a href="{% url 'logout' %}">Log Out</a>
+                    </div>
                 </div>
+            </div>
+    
+            <div class="cart-container">
+                <img src="{% static 'images/cart.png' %}" alt="Cart" class="cart-icon" onclick="viewCart()">
+                {% if cart_count > 0 %}
+                 <div class="cart-item-count">{{ cart_count }}</div>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -31,7 +54,7 @@
     <!-- Cart Page Section -->
     <main>
         <center><h2>Your Cart</h2></center>
-
+    
         <div class="cart-table-container">
             <table class="cart-table">
                 <thead>
@@ -40,42 +63,45 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Total</th>
-                        <th>Actions</th>
+                        <th>Proceed</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in cart_items %}
                     <tr>
-                        <td>{{ item.product.name }}</td>
-                        <td>₹{{ item.product.price }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>₹{{ item.total_price }}</td>
-                        <td>
-                            <!-- Proceed to checkout for this specific item -->
-                            <a href="{% url 'checkout' item.id %}" class="checkout-btn">Proceed to Checkout</a>
+                        <td data-label="Product">{{ item.product.name }}</td>
+                        <td data-label="Price">₹{{ item.product.price }}</td>
+                        <td data-label="Quantity">{{ item.quantity }}</td>
+                        <td data-label="Total">₹{{ item.total_price }}</td>
+                        <td data-label="Proceed">
+                            <a href="{% url 'checkout' item.id %}" class="checkout-btn">Checkout</a>
+                        </td>
+                        <td data-label="Delete">
                             <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Remove</a>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="5">Your cart is empty!</td>
-                    </tr>
+                    <tr><td colspan="6">Your cart is empty!</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
-
+    
             <div class="cart-summary">
                 <p><strong>Total Price: </strong> ₹{{ total_price }}</p>
             </div>
         </div>
     </main>
+    
+    </main>
 
     <!-- Footer Section -->
     <footer>
-        <p>Contact us:</p>
+        <p><a href="{% url 'contact' %}">Contact us:</a></p>
         <p>Phone: +91 9362843841</p>
         <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
         <p>&copy; 2025 ICY Store. All rights reserved.</p>
+        <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
     </footer>
 
     <script src="{% static 'js/product.js' %}"></script>

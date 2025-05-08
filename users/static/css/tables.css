@@ -1,0 +1,98 @@
+main {
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 80vh;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.orders-table-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow-x: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.orders-table th, .orders-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.orders-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.orders-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.orders-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.orders-table td {
+    word-wrap: break-word;
+}
+
+.orders-table td:nth-child(4) {
+    color: #28a745; /* Green color for price */
+}
+
+.orders-table td:nth-child(7) {
+    color: #ff9800; /* Orange color for status */
+}
+
+.orders-table td:nth-child(8) {
+    color: #007bff; /* Blue color for transaction ID */
+}
+
+.orders-table-container p {
+    text-align: center;
+    font-size: 1.2em;
+    color: #999;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+    .orders-table-container {
+        width: 95%;
+    }
+
+    .orders-table th, .orders-table td {
+        font-size: 0.9em;
+        padding: 12px;
+    }
+
+    /* Hide unnecessary columns on mobile */
+    .orders-table td:nth-child(2), .orders-table td:nth-child(3), .orders-table td:nth-child(5), .orders-table td:nth-child(6) {
+        display: none;
+    }
+
+    .orders-table th:nth-child(2), .orders-table th:nth-child(3), .orders-table th:nth-child(5), .orders-table th:nth-child(6) {
+        display: none;
+    }
+
+    .orders-table td, .orders-table th {
+        padding: 10px;
+        text-align: left;
+    }
+}
