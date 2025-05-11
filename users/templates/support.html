@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Contact</title>
+    <title>Coustomer Support and Queries</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,14 +55,15 @@
 </header>
 
 <div class="container">
-    <h2>CONTACT US</h2>
-    <br>
-    <p><strong>Last updated on 08-05-2025 11:46:58</strong></p>
-    <p> You may contact us using the information below:</p> 
-    <p>Merchant Legal entity name: HEMAM NARESH SINGH</p>
-    <p>Registered Address: Moirang Okshongbung Leikai, Moiarang, Manipur, PIN: 795133 </p>
-    <p>Operational Address: Moirang Okshongbung Leikai, Moiarang, Manipur, PIN: 795133 </p>
-    <p>Telephone No: 9362843841 </p>
-    <p>E-Mail ID: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+    <h2>FAQ</h2>
+    {% if questions %}
+        {% for item in questions %}
+        <h3>Q. {{item.Questions}}</h3>
+        <h4>Ans: {{item.Answers}}</h4>
+        {% endfor %}
+    {% else %}
+        <h3>No Queries for Now</h3>
+    {% endif %}
+    <h2>Have anymore questions? Email your question to the admins email address:<a href="mailto:markhemam@gmai.com" style="color: blue;"> markhemam@gmail.com </a></h2>
 </body>
 </html>

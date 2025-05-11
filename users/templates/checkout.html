@@ -81,8 +81,9 @@
         <div class="terms-agreement" style="margin-top: 20px;">
             <input type="checkbox" id="agreeTerms" name="agreeTerms" {% if has_agreed %}checked{% endif %} onchange="togglePaymentButton()">
             <label for="agreeTerms">
-                To proceed further, you have to agree to our 
-                <a href="{% url 'terms' %}" target="_blank">Terms & Policies</a>.
+                By proceeding further you have agreed to our 
+                <a href="{% url 'terms' %}" target="_blank">Terms & Policies</a> and 
+                <a href="{% url 'non_refund' %}" target="_blank">Non-Refundable Policy</a>.
             </label>
         </div>
         
@@ -96,6 +97,7 @@
                 </button>
             </form>
         </div>
+        <script src="{% static 'js/products.js' %}"></script>
         
         <script>
             function togglePaymentButton() {
@@ -113,12 +115,48 @@
     
     
 
-    <footer>
-        <p><a href="{% url 'contact' %}">Contact us:</a></p>
-        <p>Phone: +91 9362843841</p>
-        <p>Email: <a href="mailto:markhemam@gmail.com">markhemam@gmail.com</a></p>
+   <footer style="background: linear-gradient(to right, #000000, #434343); color: white; padding: 30px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+        <!-- Contact Info -->
+        <div style="flex: 1; min-width: 250px; margin-right: 20px;">
+            <h3>Contact Us</h3>
+            <p><a href="{% url 'contact' %}" style="color: #00bcd4;">Contact Page</a></p>
+            <p>Phone: +91 9362843841</p>
+            <p>Email: <a href="mailto:markhemam@gmail.com" style="color: #00bcd4;">markhemam@gmail.com</a></p>
+            <p><a href="{% url 'terms' %}" style="color: #00bcd4;">Terms & Policies</a></p>
+            <p><a href="{% url 'support' %}" style="color: #00bcd4;">Customer Support</a></p>
+            <p><a href="{% url 'non_refund' %}" style="color: #00bcd4;">Non-Refundable Policy</a></p>
+        </div>
+
+        <!-- Review Section -->
+        <!-- Review Section -->
+<div style="flex: 1; min-width: 250px;">
+    <h3>Leave a Review</h3>
+    <form action="{% url 'submit_review' %}" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {{ form.review_text }}
+
+        <div style="margin: 10px 0;">
+            <label>Rating:</label>
+            <div>
+                {% for value, label in form.rating.field.choices %}
+                    <input type="radio" name="rating" value="{{ value }}" id="star{{ value }}">
+                    <label for="star{{ value }}">⭐</label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" style="background-color: #00bcd4; color: white; padding: 10px 15px; border: none; border-radius: 5px;">Submit</button>
+    </form>
+</div>
+
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
         <p>&copy; 2025 ICY Store. All rights reserved.</p>
-        <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
-    </footer>
+    </div>
+</footer>
 </body>
 </html>

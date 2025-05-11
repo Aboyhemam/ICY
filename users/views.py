@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import logout
-from .models import Product, Cart, Order, Game, UserAgreement
+from .models import Product, Cart, Order, Game, UserAgreement, FAQ, Review
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 import uuid
@@ -11,6 +11,7 @@ from django.core.validators import EmailValidator
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django import forms
 # Create your views here.
 
 def terms(request):
@@ -34,6 +35,7 @@ def home(request):
 
 @login_required
 def products_by_game(request, game_id):
+    form= ReviewForm()
     try:
         game = Game.objects.get(id=game_id)
         products = Product.objects.filter(game=game)  # Assuming Product has a ForeignKey to Game
@@ -43,6 +45,7 @@ def products_by_game(request, game_id):
     return render(request, 'products_by_game.html', {
         'game': game,
         'products': products,
+        'form': form
     })
 
 
@@ -57,6 +60,7 @@ def logout_view(request):
 @login_required
 def products(request):
     search_query = request.GET.get('search', '')  
+    form= ReviewForm()
 
     if search_query:
         games = Game.objects.filter(name__icontains=search_query)
@@ -69,11 +73,17 @@ def products(request):
     context = {
         'games': games,
         'search': search_query,
-        'cart_count': cart_count,  # ✅ Pass to template
+        'cart_count': cart_count,
+        'form': form,# ✅ Pass to template
     }
 
     return render(request, 'products.html', context)
 
+@login_required
+def support(request):
+    questions= FAQ.objects.all
+    
+    return render(request, 'support.html', {'questions': questions})
 
 
 @login_required
@@ -99,6 +109,7 @@ def add_to_cart(request, product_id):
 def cart_view(request):
     cart_items = Cart.objects.filter(user=request.user)
     total_price = 0
+    form = ReviewForm()
 
     # Assuming all items in the cart have the same player_id and server_id
     player_id = None
@@ -116,6 +127,7 @@ def cart_view(request):
     # If user clicks "Proceed to Checkout", create an order
     if request.method == 'POST':
         order_id = str(uuid.uuid4())  # Generate a unique order ID
+        
 
         # Create the Order with player_id and server_id from the cart
         order = Order.objects.create(
@@ -130,7 +142,7 @@ def cart_view(request):
 
         return redirect('checkout', order_id=order.order_id)
 
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price, 'form': form })
 
 
 
@@ -194,8 +206,9 @@ def create_order(request):
 def orders(request):
     # Fetch all orders for the logged-in user
     user_orders = Order.objects.filter(username=request.user)
+    form = ReviewForm()
 
-    return render(request, 'orders.html', {'user_orders': user_orders})
+    return render(request, 'orders.html', {'user_orders': user_orders, 'form':form})
 
 
 @login_required
@@ -203,6 +216,7 @@ def account_settings(request):
     if request.method == 'POST':
         new_username = request.POST.get('username')
         new_email = request.POST.get('email')
+        form = ReviewForm()
 
         # Validate email format
         try:
@@ -227,12 +241,13 @@ def account_settings(request):
         messages.success(request, 'Your account has been updated successfully.')
         return redirect('account_settings')  # Or redirect to another page if needed
 
-    return render(request, 'account_settings.html')
+    return render(request, 'account_settings.html', {'form':form})
 
 @login_required
 def order_detail(request, order_id):
+    form= ReviewForm()
     order = get_object_or_404(Order, id=order_id, username=request.user)
-    return render(request, 'order_detail.html', {'order': order})
+    return render(request, 'order_detail.html', {'order': order, 'form': form})
 
 @login_required
 def confirm_terms_and_payment(request):
@@ -244,3 +259,28 @@ def confirm_terms_and_payment(request):
             agreement.save()
         return redirect('payment')
     return redirect('checkout')
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['review_text', 'rating']
+        widgets = {
+            'review_text': forms.Textarea(attrs={
+                'placeholder': 'Write your feedback...',
+                'rows': 4,
+                'style': 'width: 100%; padding: 10px; border-radius: 8px;'
+            }),
+        }
+    
+@login_required
+def submit_review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+    return redirect('products')
+
+def non_refund(request):
+    return render(request, 'non-refundable.html')

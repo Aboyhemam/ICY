@@ -41,18 +41,22 @@
             line-height: 1.7;
             text-align: justify;
         }
+        a{
+            text-decoration: none;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
 <header>
     <img src="/static/images/logo.png" alt="ICY Store Logo"> <!-- Change path if needed -->
-    <span style="font-size: 24px; font-weight: bold;">ICY Store</span>
+    <a href="{% url 'products' %}"><span style="font-size: 24px; font-weight: bold;">ICY Store</span></a>
 </header>
 
 <div class="container">
     <h2>Terms & Conditions</h2>
-    <p><strong>Last Updated:</strong> 08-05-2025 11:07:16</p>
+    <p><strong>Last Updated:</strong> 11-05-2025 11:07:16</p>
 
     <p>These Terms and Conditions, along with our Privacy Policy or any other applicable terms (“Terms”), constitute a binding agreement between <strong>HEMAM NARESH SINGH</strong> (“Website Owner”, “we”, “us”, or “our”) and you (“you” or “your”) regarding your use of our website and the goods or services we provide (collectively, “Services”).</p>
 
