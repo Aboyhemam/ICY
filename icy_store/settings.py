@@ -155,6 +155,8 @@ AUTHENTICATION_BACKENDS = {
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend"
 }
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True
 
 LOGIN_REDIRECT_URL = "/products/"
 LOGOUT_REDIRECT_URL ="/"
@@ -164,4 +166,19 @@ SOCIALACCOUNT_LOGOUT_ON_GET = True
 
 MEDIA_URL = '/media/'
 
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Replace these with your email provider's settings
+EMAIL_HOST = 'smtp.gmail.com'            # or smtp.yourdomain.com
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# This is the email OTPs will be sent FROM
+EMAIL_HOST_USER = 'markhemam@gmail.com'     # sender address
+EMAIL_HOST_PASSWORD = 'hnxy aqdj swli smvg'     # app password (NOT your normal password)
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

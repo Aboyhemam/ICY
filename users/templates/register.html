@@ -1,0 +1,105 @@
+{% load socialaccount %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ICY Store</title>
+    <link rel="stylesheet" href="{% static 'css/homes.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Create an Account</h1>
+
+        <div class="login-wrapper">
+
+            <div class="login-section">
+                <h2>Google Login</h2>
+                <a class="google-login-btn" href="{% provider_login_url 'google' %}">
+                    <img src="{% static 'images/google-logo.png' %}" alt="Google Logo" class="google-logo">
+                    Login With Google
+                </a>
+            </div>
+            
+            <div class="login-section">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+
+                <label for="id_username">Username:</label>
+                {{ form.username }}
+
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+
+                <label for="id_password1">Password:</label>
+<div class="password-wrapper">
+    {{ form.password1 }}
+    <img src="{% static 'images/eye.png' %}" alt="Toggle Password" id="toggle-password1" class="toggle-password-icon">
+</div>
+
+<label for="id_password2">Confirm Password:</label>
+<div class="password-wrapper">
+    {{ form.password2 }}
+    <img src="{% static 'images/eye.png' %}" alt="Toggle Password" id="toggle-password2" class="toggle-password-icon">
+</div>
+
+
+                <button type="submit">Register</button>
+            </form>
+
+            <p>Already have an account? <a href="{% url 'home' %}">Login here</a></p>
+        </div>
+
+        
+    </div></div>
+
+    <footer>
+        <p><a href="{% url 'contact' %}">Contact us:</a></p>
+        <p>Phone: +91 6009952090</p>
+        <p>Email: <a href="mailto:nareshhemam55@gmail.com">nareshhemam55@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+        <p><a href="{% url 'terms' %}">Terms & Policies</a></p>
+    </footer>
+    <script>
+    // Toggle Password 1
+    const togglePassword1 = document.getElementById('toggle-password1');
+    const passwordField1 = document.getElementById('id_password1');
+
+    togglePassword1.addEventListener('click', function () {
+        const type = passwordField1.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField1.setAttribute('type', type);
+
+        // Toggle eye icon if you have two different icons
+        if (type === 'text') {
+            togglePassword1.src = "{% static 'images/eye-off.png' %}";
+        } else {
+            togglePassword1.src = "{% static 'images/eye.png' %}";
+        }
+    });
+
+    // Toggle Password 2 (Confirm Password)
+    const togglePassword2 = document.getElementById('toggle-password2');
+    const passwordField2 = document.getElementById('id_password2');
+
+    togglePassword2.addEventListener('click', function () {
+        const type = passwordField2.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField2.setAttribute('type', type);
+
+        // Toggle eye icon if you have two different icons
+        if (type === 'text') {
+            togglePassword2.src = "{% static 'images/eye-off.png' %}";
+        } else {
+            togglePassword2.src = "{% static 'images/eye.png' %}";
+        }
+    });
+</script>
+
+</body>
+</html>

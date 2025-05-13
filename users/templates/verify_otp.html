@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head><title>Verify OTP</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/password.css' %}"></head>
+<body>
+<div class="container">
+    <h2>Enter OTP</h2>
+    {% for message in messages %}
+        <p class="error">{{ message }}</p>
+    {% endfor %}
+    <form method="post">{% csrf_token %}
+        {{ form.otp.label_tag }}
+        {{ form.otp }}
+        <button type="submit">Verify</button>
+    </form>
+</div>
+</body>
+</html>

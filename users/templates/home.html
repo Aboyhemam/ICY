@@ -1,37 +1,84 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICY Store</title>
-    <link rel="stylesheet" href="{% static 'css/home.css' %}"> <!-- Correct way -->
+    <link rel="stylesheet" href="{% static 'css/homes.css' %}">
 </head>
 <body>
     <div class="container">
         <h1>Welcome to ICY Store</h1>
         <h2>We guarantee 100% product delivery</h2>
-       
 
-        {% load socialaccount %}
+        <div class="login-wrapper">
+            <!-- Google Login -->
+            <div class="login-section">
+                <h2>Google Login</h2>
+                <a class="google-login-btn" href="{% provider_login_url 'google' %}">
+                    <img src="{% static 'images/google-logo.png' %}" alt="Google Logo" class="google-logo">
+                    Login With Google
+                </a>
+            </div>
+
+            <!-- Manual Login -->
+            <!-- Manual Login -->
 <div class="login-section">
-    <h2>Google Login</h2>
-    <a class="google-login-btn" href="{% provider_login_url 'google' %}">
-        <img src="{% static 'images/google-logo.png' %}" alt="Google Logo" class="google-logo">
-        Login With Google
-    </a>
+    <h2>Manual Login</h2>
+
+    {% if login_error %}
+        <div class="error">
+            <p>{{ login_error }}</p>
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'manual_login' %}">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+
+        <label for="password">Password:</label>
+<div class="password-wrapper">
+    <input type="password" name="password" id="password-field" required>
+    <img src="{% static 'images/eye.png' %}" alt="Toggle Password" id="toggle-password" class="toggle-password-icon">
 </div>
 
 
-        </div>
-    
+        <button type="submit">Login</button>
+    </form>
 
-        <footer>
-            <p><a href="{% url 'contact' %}">Contact us:</a></p>
-            <p>Phone: +91 6009952090</p>
-            <p>Email: <a href="mailto:nareshhemam55@gmail.com" >nareshhemam55@gmail.com</a></p>
-            <p>&copy; 2025 ICY Store. All rights reserved.</p>
-            <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
-        </footer>
+    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+    <p><a href="{% url 'forgot_password' %}">Forgot your password?</a></p>
+</div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p><a href="{% url 'contact' %}">Contact us:</a></p>
+        <p>Phone: +91 6009952090</p>
+        <p>Email: <a href="mailto:nareshhemam55@gmail.com">nareshhemam55@gmail.com</a></p>
+        <p>&copy; 2025 ICY Store. All rights reserved.</p>
+        <p><a href="{% url 'terms' %}">Terms & Policies </a></p>
+    </footer>
+    <script>
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordField = document.getElementById('password-field');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+
+        // Toggle eye icon if you have two different icons
+        if (type === 'text') {
+            togglePassword.src = "{% static 'images/eye-off.png' %}";
+        } else {
+            togglePassword.src = "{% static 'images/eye.png' %}";
+        }
+    });
+</script>
+
 </body>
 </html>

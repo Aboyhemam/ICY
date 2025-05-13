@@ -12,6 +12,17 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django import forms
+from django.contrib.auth import authenticate, login, get_backends
+from .forms import CustomUserCreationForm
+from django.contrib import messages
+from .models import OTPVerification
+from .forms import EmailForm, OTPForm, PasswordResetForm
+from django.contrib.auth.hashers import make_password
+import random
+from django.core.mail import send_mail
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 # Create your views here.
 
 def terms(request):
@@ -20,6 +31,45 @@ def terms(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('products')
+
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            backend = get_backends()[0]
+            user.backend = f"{backend.__module__}.{backend.__class__.__name__}"
+            login(request, user)
+            messages.success(request, 'Registration successful!')
+            return redirect('products')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'register.html', {'form': form})
+
+
+def manual_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('products')
+        else:
+            # Re-render the home page with an error message
+            return render(request, 'home.html', {
+                'login_error': "Invalid email or password. Please try again."
+            })
+
+    return redirect('home')
 
 def home(request):
     if request.user.is_authenticated:
@@ -213,10 +263,11 @@ def orders(request):
 
 @login_required
 def account_settings(request):
+    form = ReviewForm()
     if request.method == 'POST':
         new_username = request.POST.get('username')
         new_email = request.POST.get('email')
-        form = ReviewForm()
+        
 
         # Validate email format
         try:
@@ -241,7 +292,7 @@ def account_settings(request):
         messages.success(request, 'Your account has been updated successfully.')
         return redirect('account_settings')  # Or redirect to another page if needed
 
-    return render(request, 'account_settings.html', {'form':form})
+    return render(request, 'account_settings.html', {'form': form})
 
 @login_required
 def order_detail(request, order_id):
@@ -284,3 +335,103 @@ def submit_review(request):
 
 def non_refund(request):
     return render(request, 'non-refundable.html')
+
+def forgot_password_view(request):
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+                otp = f"{random.randint(100000, 999999)}"
+
+                # Save OTP to DB
+                OTPVerification.objects.create(email=email, otp_code=otp)
+
+                send_mail(
+                    subject="Your ICY Store OTP",
+                    message=f"Use this OTP to reset your password: {otp}",
+                    from_email="noreply@icystore.com",
+                    recipient_list=[email],
+                    fail_silently=False
+                )
+
+                request.session['reset_email'] = email
+                return redirect('verify_otp')
+
+            except User.DoesNotExist:
+                messages.error(request, "No user found with that email")
+    else:
+        form = EmailForm()
+    return render(request, 'forgot_password_otp.html', {'form': form})
+
+def verify_otp_view(request):
+    email = request.session.get('reset_email')
+    if not email:
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        form = OTPForm(request.POST)
+        if form.is_valid():
+            input_otp = form.cleaned_data['otp']
+            try:
+                latest_otp = OTPVerification.objects.filter(email=email, is_used=False).latest('created_at')
+
+                if latest_otp.otp_code == input_otp:
+                    if latest_otp.is_expired():
+                        messages.error(request, "OTP has expired")
+                    else:
+                        latest_otp.is_used = True
+                        latest_otp.save()
+                        request.session['otp_verified'] = True
+                        return redirect('reset_password_custom')
+                else:
+                    messages.error(request, "Invalid OTP")
+            except OTPVerification.DoesNotExist:
+                messages.error(request, "No OTP found for this email")
+    else:
+        form = OTPForm()
+    return render(request, 'verify_otp.html', {'form': form})
+
+
+def reset_password_custom_view(request):
+    email = request.session.get('reset_email')
+    otp_verified = request.session.get('otp_verified', False)
+
+    if not email or not otp_verified:
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            user = User.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
+
+            # Clean up
+            request.session.pop('reset_email', None)
+            request.session.pop('otp_verified', None)
+
+            messages.success(request, "Password reset successful. Please log in.")
+            return redirect('home')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'reset_password_custom.html', {'form': form})
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Keeps the user logged in
+            messages.success(request, 'Your password was successfully updated.')
+            return redirect('account_settings')
+        else:
+            for error in form.errors.values():
+                messages.error(request, error)
+            return redirect('account_settings')
+    else:
+        return redirect('account_settings')
+
