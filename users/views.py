@@ -25,6 +25,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 # Create your views here.
 
+def privacy(request):
+    return render(request, 'privacy.html')
+
+def shipping(request):
+    return render(request, 'shipping.html')
+
 def terms(request):
     return render(request, 'terms.html')
 

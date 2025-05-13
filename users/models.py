@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 
 
@@ -88,3 +89,4 @@ class OTPVerification(models.Model):
 
     def __str__(self):
         return f"{self.email} - {self.otp_code} - {'Expired' if self.is_expired() else 'Active'}"
+    

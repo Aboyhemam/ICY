@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import uuid
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -155,7 +157,9 @@ AUTHENTICATION_BACKENDS = {
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend"
 }
-ACCOUNT_USERNAME_REQUIRED = True
+
+
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 
 LOGIN_REDIRECT_URL = "/products/"
@@ -178,7 +182,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # This is the email OTPs will be sent FROM
-EMAIL_HOST_USER = ''     # sender address
-EMAIL_HOST_PASSWORD = ''     # app password (NOT your normal password)
+EMAIL_HOST_USER = 'markhemam@gmail.com'     # sender address
+EMAIL_HOST_PASSWORD = 'hnxy aqdj swli smvg'     # app password (NOT your normal password)
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
