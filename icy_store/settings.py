@@ -182,8 +182,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # This is the email OTPs will be sent FROM
-EMAIL_HOST_USER = 'markhemam@gmail.com'     # sender address
-EMAIL_HOST_PASSWORD = 'hnxy aqdj swli smvg'     # app password (NOT your normal password)
+EMAIL_HOST_USER = ''     # sender address
+EMAIL_HOST_PASSWORD = ''     # app password (NOT your normal password)
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
